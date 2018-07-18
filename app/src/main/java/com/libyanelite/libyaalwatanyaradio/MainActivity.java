@@ -17,13 +17,9 @@ import java.io.IOException;
 public class MainActivity extends AppCompatActivity {
 
     private ImageButton bPlay;
-    private ImageButton bStop;
-    private String STREAM_URL = "http://audio1.meway.tv:8082/";
     private MediaPlayer mPlayer;
-    private ImageButton bClose;
     private AudioManager.OnAudioFocusChangeListener mOnAudioFocusChangeListener;
     private static final String TAG = "Radio Elite";
-    private boolean mAudioFocusGranted = false;
     private AudioManager mAudioManager;
 
 
@@ -85,8 +81,8 @@ public class MainActivity extends AppCompatActivity {
 //-----------------------------------------------------------------------------------------
 
         bPlay =  findViewById(R.id.bPlay);
-        bStop =  findViewById(R.id.bStop);
-        bClose = findViewById(R.id.bClose);
+        ImageButton bStop = findViewById(R.id.bStop);
+        ImageButton bClose = findViewById(R.id.bClose);
         mPlayer = new MediaPlayer();
         mPlayer.setAudioStreamType(AudioManager.STREAM_MUSIC);
 
@@ -151,6 +147,7 @@ public class MainActivity extends AppCompatActivity {
 
             mPlayer.reset();
             try {
+                String STREAM_URL = "http://audio1.meway.tv:8082/";
                 mPlayer.setDataSource(STREAM_URL);
                 mPlayer.prepareAsync();
                 mPlayer.setOnPreparedListener(new MediaPlayer.OnPreparedListener() {
