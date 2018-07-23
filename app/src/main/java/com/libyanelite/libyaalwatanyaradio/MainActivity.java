@@ -181,9 +181,10 @@ public class MainActivity extends AppCompatActivity {
 
             mPlayer.reset();
             try {
-                String STREAM_URL = "http://45.43.200.154:12648"; // Use the static address in case there is a probloem with the site.
-                STREAM_URL = streamURL.trim(); // trim(): Returns a string whose value is this string, with any leading and trailing whitespace removed.
-
+                String STREAM_URL = "http://45.43.200.154:12648"; // Use the static address in case there is a problem with the site.
+                if (streamURL != "") {
+                    STREAM_URL = streamURL.trim(); // trim(): Returns a string whose value is this string, with any leading and trailing whitespace removed.
+                }
                 Toast.makeText(this, "URL is : " + STREAM_URL,
                         Toast.LENGTH_LONG).show();
                 mPlayer.setDataSource(STREAM_URL);
