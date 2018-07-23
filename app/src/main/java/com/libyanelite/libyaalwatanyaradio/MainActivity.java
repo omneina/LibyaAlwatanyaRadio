@@ -9,12 +9,18 @@ import android.util.Log;
 import android.view.KeyEvent;
 import android.view.View;
 import android.widget.ImageButton;
+import android.widget.Toast;
 
+import java.io.BufferedReader;
 import java.io.IOException;
-
+import java.io.InputStreamReader;
+import java.net.MalformedURLException;
+import java.net.URL;
 
 
 public class MainActivity extends AppCompatActivity {
+
+
 
     private ImageButton bPlay;
     private MediaPlayer mPlayer;
@@ -36,6 +42,25 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+        // Fetch URL Remotely ------------------------------START
+        try {
+            // Create a URL for the desired page
+            URL url = new URL("http://andtext.000webhostapp.com/Alwatanya.php");
+
+            // Read all the text returned by the server
+            BufferedReader in = new BufferedReader(new InputStreamReader(url.openStream()));
+            String str = in.readLine();
+            in.close();
+            t.setText(str);
+        } catch (MalformedURLException e) {
+            Toast.makeText(this, "Malform URL",
+                    Toast.LENGTH_LONG).show();
+        } catch (IOException e) {
+            Toast.makeText(this, "IO Exception" ,
+                    Toast.LENGTH_LONG).show();
+            
+        }
+        // Fetch URL Remotely ------------------------------END
 // Hook to audio service ----------------------------------------------------------------
         mAudioManager = (AudioManager) getSystemService(Context.AUDIO_SERVICE);
 
