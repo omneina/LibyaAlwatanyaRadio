@@ -53,7 +53,7 @@ public class MainActivity extends AppCompatActivity {
         // Set Thread for URL Fetch ------- END
        try {
             // Create a URL for the desired page
-            URL url = new URL("http://andtext.000webhostapp.com/Alwatanya.php");
+            URL url = new URL("http://radio.libyanelite.ly/Alwatanya.html");
 
             // Read all the text returned by the server
             BufferedReader in = new BufferedReader(new InputStreamReader(url.openStream()));
@@ -117,22 +117,25 @@ public class MainActivity extends AppCompatActivity {
         bPlay =  findViewById(R.id.bPlay);
         ImageButton bStop = findViewById(R.id.bStop);
         ImageButton bClose = findViewById(R.id.bClose);
-        mPlayer = new MediaPlayer();
-        mPlayer.setAudioStreamType(AudioManager.STREAM_MUSIC);
+        //mPlayer = new MediaPlayer();    //Moved to bPlay on Click
+        //mPlayer.setAudioStreamType(AudioManager.STREAM_MUSIC);  //Moved to bPlay on Click
 
 
         bPlay.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                // mPlayer initialization is moved here because setting mPlayer to null in bStop then pressing bPlay caused Fatal Error. ---START
+                mPlayer = new MediaPlayer();
+                mPlayer.setAudioStreamType(AudioManager.STREAM_MUSIC);
+                // mPlayer initialization is moved here because setting mPlayer to null in bStop then pressing bPlay caused Fatal Error. ---END
 
-// Request Audio Focus ---------------------------------------------------------------------
+                // Request Audio Focus ---------------------------------------------------------------------
                 int result = mAudioManager.requestAudioFocus(mOnAudioFocusChangeListener,
                         // Hint: the music stream.
                         AudioManager.STREAM_MUSIC,
                         // Request permanent focus.
                         AudioManager.AUDIOFOCUS_GAIN);
-
-//-------------------------------------------------------------------------------------------
+                //-------------------------------------------------------------------------------------------
 
                 if (result==AudioManager.AUDIOFOCUS_REQUEST_GRANTED){
                     play();
@@ -146,8 +149,16 @@ public class MainActivity extends AppCompatActivity {
             public void onClick(View view) {
                 bPlay.setImageResource(R.drawable.play); // Set play button image to normal.
                 //bStop.setImageResource(R.drawable.stop_pressed); // Set stop button image to pressed.
-
-                mPlayer.stop();
+                // Standard practice to initialize media player (copied from internet) --> START
+                if(mPlayer!=null) {
+                    if(mPlayer.isPlaying()) {
+                        mPlayer.stop();
+                    }
+                    mPlayer.reset();
+                    mPlayer.release();
+                    mPlayer=null;
+                }
+                // Standard practice to initialize media player (copied from internet) --> END
                 bPlay.setEnabled(true);
 
             }
@@ -156,10 +167,19 @@ public class MainActivity extends AppCompatActivity {
         bClose.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                mPlayer.stop();
+                // Standard practice to initialize media player (copied from internet) --> START
+                if(mPlayer!=null) {
+                    if(mPlayer.isPlaying()) {
+                        mPlayer.stop();
+                    }
+                    mPlayer.reset();
+                    mPlayer.release();
+                    mPlayer=null;
+                }
+                // Standard practice to initialize media player (copied from internet) --> END
+
                 mAudioManager.abandonAudioFocus(mOnAudioFocusChangeListener);
-                mPlayer.release();
-                mPlayer = null;
+
                 // System.exit(0);
                 MainActivity.this.finish();
             }
@@ -167,21 +187,23 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void pause() {
-        if (mPlayer != null){
-            mPlayer.pause();
-        }
+        if (mPlayer != null) {
+            if (mPlayer.isPlaying()) {
+                mPlayer.pause();
+            }
 
+        }
     }
 
     private void play() {
+
         if (!mPlayer.isPlaying()) {
             bPlay.setEnabled(false);
             bPlay.setImageResource(R.drawable.play_pressed);
+            // mPlayer.reset(); // Not Needed after adding the standard practice code in bPlay
 
-
-            mPlayer.reset();
             try {
-                String STREAM_URL = "http://45.43.200.154:12648"; // Use the static address in case there is a probloem with the site.
+                String STREAM_URL = "http://bbcwssc.ic.llnwd.net/stream/bbcwssc_mp1_ws-araba"; // Use the static address in case there is a probloem with the site.
                 STREAM_URL = streamURL.trim(); // trim(): Returns a string whose value is this string, with any leading and trailing whitespace removed.
 
                 Toast.makeText(this, "URL is : " + STREAM_URL,
@@ -191,6 +213,7 @@ public class MainActivity extends AppCompatActivity {
                 mPlayer.setOnPreparedListener(new MediaPlayer.OnPreparedListener() {
                     @Override
                     public void onPrepared(MediaPlayer mediaPlayer) {
+                        Toast.makeText(MainActivity.this, "Connected", Toast.LENGTH_SHORT).show();
                         mediaPlayer.start();
                     }
                 });
