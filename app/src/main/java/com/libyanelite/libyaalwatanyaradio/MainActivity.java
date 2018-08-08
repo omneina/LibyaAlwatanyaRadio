@@ -3,6 +3,7 @@ package com.libyanelite.libyaalwatanyaradio;
 import android.content.Context;
 import android.media.AudioManager;
 import android.media.MediaPlayer;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.StrictMode;
 import android.support.v7.app.AppCompatActivity;
@@ -10,6 +11,7 @@ import android.util.Log;
 import android.view.KeyEvent;
 import android.view.View;
 import android.widget.ImageButton;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import java.io.BufferedReader;
@@ -19,7 +21,7 @@ import java.net.MalformedURLException;
 import java.net.URL;
 
 
-public class MainActivity extends AppCompatActivity {
+public class MainActivity extends AppCompatActivity implements GetFetchedURL{
 
 
 
@@ -28,7 +30,23 @@ public class MainActivity extends AppCompatActivity {
     private AudioManager.OnAudioFocusChangeListener mOnAudioFocusChangeListener;
     private static final String TAG = "Radio Elite";
     private AudioManager mAudioManager;
-    private String streamURL = "";
+    private String streamURL;
+    private String streamAddress;
+
+
+    @Override
+    public void getFetchedURL(String result) {
+        streamURL = result;
+        Toast.makeText(this, "URL Fetched!! = " + streamURL, Toast.LENGTH_SHORT).show();
+        if (streamURL == "Failed to get Stream. Internet maybe slow or disconnected."){
+            TextView tvTemp = MainActivity.this.findViewById(R.id.tvStatus);
+            tvTemp.setText(streamURL);
+        }
+
+    }
+
+
+    //private TextView status = findViewById(R.id.tvStatus);
 
 
     @Override
@@ -44,7 +62,23 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+         TextView status = findViewById(R.id.tvStatus);
 
+
+        FetchURL fetchURL = new FetchURL(MainActivity.this);
+
+
+        //execute the async task
+        fetchURL.execute();
+
+
+
+
+         String test = streamURL;
+         //
+        Toast.makeText(this, "URL is : " + streamURL, Toast.LENGTH_LONG).show();
+       // streamURL = fetchURL.getMyURL();
+/*
         // Fetch URL Remotely ------------------------------START
         // Set Thread for URL Fetch ------- START
         StrictMode.ThreadPolicy policy = new
@@ -69,7 +103,7 @@ public class MainActivity extends AppCompatActivity {
 
         }
         // Fetch URL Remotely ------------------------------END
-
+*/
 // Hook to audio service ----------------------------------------------------------------
         mAudioManager = (AudioManager) getSystemService(Context.AUDIO_SERVICE);
 
@@ -94,18 +128,18 @@ public class MainActivity extends AppCompatActivity {
                         Log.i(TAG, "AUDIOFOCUS_GAIN_TRANSIENT_MAY_DUCK");
                         break;
                     case AudioManager.AUDIOFOCUS_LOSS:
-                        Log.e(TAG, "AUDIOFOCUS_LOSS");
+                        Log.i(TAG, "AUDIOFOCUS_LOSS");
                         pause();
                         break;
                     case AudioManager.AUDIOFOCUS_LOSS_TRANSIENT:
-                        Log.e(TAG, "AUDIOFOCUS_LOSS_TRANSIENT");
+                        Log.i(TAG, "AUDIOFOCUS_LOSS_TRANSIENT");
                         pause();
                         break;
                     case AudioManager.AUDIOFOCUS_LOSS_TRANSIENT_CAN_DUCK:
-                        Log.e(TAG, "AUDIOFOCUS_LOSS_TRANSIENT_CAN_DUCK");
+                        Log.i(TAG, "AUDIOFOCUS_LOSS_TRANSIENT_CAN_DUCK");
                         break;
                     case AudioManager.AUDIOFOCUS_REQUEST_FAILED:
-                        Log.e(TAG, "AUDIOFOCUS_REQUEST_FAILED");
+                        Log.i(TAG, "AUDIOFOCUS_REQUEST_FAILED");
                         break;
                     default:
                         //
@@ -197,35 +231,55 @@ public class MainActivity extends AppCompatActivity {
 
     private void play() {
 
-        if (!mPlayer.isPlaying()) {
-            bPlay.setEnabled(false);
-            bPlay.setImageResource(R.drawable.play_pressed);
-            // mPlayer.reset(); // Not Needed after adding the standard practice code in bPlay
+        if (mPlayer != null) {
+            if (!mPlayer.isPlaying()) {
+                bPlay.setEnabled(false);
+                bPlay.setImageResource(R.drawable.play_pressed);
+                // mPlayer.reset(); // Not Needed after adding the standard practice code in bPlay
 
-            try {
-                String STREAM_URL = "http://bbcwssc.ic.llnwd.net/stream/bbcwssc_mp1_ws-araba"; // Use the static address in case there is a probloem with the site.
-                STREAM_URL = streamURL.trim(); // trim(): Returns a string whose value is this string, with any leading and trailing whitespace removed.
+                try {
+                    //String STREAM_URL = "http://bbcwssc.ic.llnwd.net/stream/bbcwssc_mp1_ws-araba"; // Use the static address in case there is a probloem with the site.
+                    streamAddress = streamURL; // trim(): Returns a string whose value is this string, with any leading and trailing whitespace removed.
 
-                Toast.makeText(this, "URL is : " + STREAM_URL,
-                        Toast.LENGTH_LONG).show();
-                mPlayer.setDataSource(STREAM_URL);
-                mPlayer.prepareAsync();
-                mPlayer.setOnPreparedListener(new MediaPlayer.OnPreparedListener() {
+                    Toast.makeText(this, "URL is : " + streamAddress,
+                            Toast.LENGTH_LONG).show();
+                    mPlayer.setDataSource(streamAddress);
+                    mPlayer.prepareAsync();
+                /*
+                //######################################################
+
+                mPlayer.setOnBufferingUpdateListener(new MediaPlayer.OnBufferingUpdateListener() {
                     @Override
-                    public void onPrepared(MediaPlayer mediaPlayer) {
-                        Toast.makeText(MainActivity.this, "Connected", Toast.LENGTH_SHORT).show();
-                        mediaPlayer.start();
+                    public void onBufferingUpdate(MediaPlayer mp, int percent) {
+                        status.setText(percent);
                     }
                 });
 
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
+                //######################################################
+                */
+                    mPlayer.setOnPreparedListener(new MediaPlayer.OnPreparedListener() {
+                        @Override
+                        public void onPrepared(MediaPlayer mediaPlayer) {
+                            Toast.makeText(MainActivity.this, "Connected", Toast.LENGTH_SHORT).show();
+                            mediaPlayer.start();
+                        }
+                    });
 
+                } catch (IOException e) {
+                    e.printStackTrace();
+                    Toast.makeText(this, "Error " + e, Toast.LENGTH_LONG).show();
+                }
+            }
         }
     }
 
 
 
-
 }
+
+
+
+
+
+
+
