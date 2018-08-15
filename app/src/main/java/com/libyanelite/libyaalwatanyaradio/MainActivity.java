@@ -3,9 +3,9 @@ package com.libyanelite.libyaalwatanyaradio;
 import android.content.Context;
 import android.media.AudioManager;
 import android.media.MediaPlayer;
-import android.os.AsyncTask;
+import android.net.wifi.WifiManager;
 import android.os.Bundle;
-import android.os.StrictMode;
+import android.os.PowerManager;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.KeyEvent;
@@ -14,11 +14,7 @@ import android.widget.ImageButton;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import java.io.BufferedReader;
 import java.io.IOException;
-import java.io.InputStreamReader;
-import java.net.MalformedURLException;
-import java.net.URL;
 
 
 public class MainActivity extends AppCompatActivity implements GetFetchedURL{
@@ -31,20 +27,26 @@ public class MainActivity extends AppCompatActivity implements GetFetchedURL{
     private static final String TAG = "Radio Elite";
     private AudioManager mAudioManager;
     private String streamURL;
-    private String streamAddress;
+    private TextView status;
+    private TextView mPlyer_info;
+    private WifiManager.WifiLock wifiLock;
 
 
+    // This is the interface method that passes the fetched stream URL to Main Activity. ===== START
     @Override
     public void getFetchedURL(String result) {
         streamURL = result;
+        /*
         Toast.makeText(this, "URL Fetched!! = " + streamURL, Toast.LENGTH_SHORT).show();
-        if (streamURL == "Failed to get Stream. Internet maybe slow or disconnected."){
+        if (streamURL.equals("Failed to get Stream. Internet maybe slow or disconnected.") ){
             TextView tvTemp = MainActivity.this.findViewById(R.id.tvStatus);
-            tvTemp.setText(streamURL);
-        }
+            tvTemp.setText("Failed to get Stream.\n Internet maybe slow or disconnected.");
 
+        }
+        */
     }
 
+    // This is the interface method that passes the fetched stream URL to Main Activity. ===== END
 
     //private TextView status = findViewById(R.id.tvStatus);
 
@@ -62,7 +64,7 @@ public class MainActivity extends AppCompatActivity implements GetFetchedURL{
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-         TextView status = findViewById(R.id.tvStatus);
+
 
 
         FetchURL fetchURL = new FetchURL(MainActivity.this);
@@ -74,36 +76,10 @@ public class MainActivity extends AppCompatActivity implements GetFetchedURL{
 
 
 
-         String test = streamURL;
+
          //
-        Toast.makeText(this, "URL is : " + streamURL, Toast.LENGTH_LONG).show();
-       // streamURL = fetchURL.getMyURL();
-/*
-        // Fetch URL Remotely ------------------------------START
-        // Set Thread for URL Fetch ------- START
-        StrictMode.ThreadPolicy policy = new
-                StrictMode.ThreadPolicy.Builder().permitAll().build();
-        StrictMode.setThreadPolicy(policy);
-        // Set Thread for URL Fetch ------- END
-       try {
-            // Create a URL for the desired page
-            URL url = new URL("http://radio.libyanelite.ly/Alwatanya.html");
 
-            // Read all the text returned by the server
-            BufferedReader in = new BufferedReader(new InputStreamReader(url.openStream()));
-            streamURL = in.readLine();
-            in.close();
 
-        } catch (MalformedURLException e) {
-            Toast.makeText(this, "Malform URL",
-                    Toast.LENGTH_LONG).show();
-        } catch (IOException e) {
-            Toast.makeText(this, "IO Exception" ,
-                    Toast.LENGTH_LONG).show();
-
-        }
-        // Fetch URL Remotely ------------------------------END
-*/
 // Hook to audio service ----------------------------------------------------------------
         mAudioManager = (AudioManager) getSystemService(Context.AUDIO_SERVICE);
 
@@ -119,7 +95,13 @@ public class MainActivity extends AppCompatActivity implements GetFetchedURL{
                 switch (focusChange) {
                     case AudioManager.AUDIOFOCUS_GAIN:
                         Log.i(TAG, "AUDIOFOCUS_GAIN");
-                        play();
+                        if (mPlayer != null) {
+                            mPlayer.start();
+                        }
+                      //  else {
+                      //      play();
+                      //  }
+
                         break;
                     case AudioManager.AUDIOFOCUS_GAIN_TRANSIENT:
                         Log.i(TAG, "AUDIOFOCUS_GAIN_TRANSIENT");
@@ -148,9 +130,12 @@ public class MainActivity extends AppCompatActivity implements GetFetchedURL{
         };
 //-----------------------------------------------------------------------------------------
 
+       status = findViewById(R.id.tvStatus);
+       mPlyer_info = findViewById(R.id.tvInfo);
         bPlay =  findViewById(R.id.bPlay);
-        ImageButton bStop = findViewById(R.id.bStop);
-        ImageButton bClose = findViewById(R.id.bClose);
+        final ImageButton bStop = findViewById(R.id.bStop);bStop.setEnabled(false);
+        final ImageButton bClose = findViewById(R.id.bClose);
+
         //mPlayer = new MediaPlayer();    //Moved to bPlay on Click
         //mPlayer.setAudioStreamType(AudioManager.STREAM_MUSIC);  //Moved to bPlay on Click
 
@@ -158,22 +143,8 @@ public class MainActivity extends AppCompatActivity implements GetFetchedURL{
         bPlay.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                // mPlayer initialization is moved here because setting mPlayer to null in bStop then pressing bPlay caused Fatal Error. ---START
-                mPlayer = new MediaPlayer();
-                mPlayer.setAudioStreamType(AudioManager.STREAM_MUSIC);
-                // mPlayer initialization is moved here because setting mPlayer to null in bStop then pressing bPlay caused Fatal Error. ---END
-
-                // Request Audio Focus ---------------------------------------------------------------------
-                int result = mAudioManager.requestAudioFocus(mOnAudioFocusChangeListener,
-                        // Hint: the music stream.
-                        AudioManager.STREAM_MUSIC,
-                        // Request permanent focus.
-                        AudioManager.AUDIOFOCUS_GAIN);
-                //-------------------------------------------------------------------------------------------
-
-                if (result==AudioManager.AUDIOFOCUS_REQUEST_GRANTED){
-                    play();
-                }
+               initialize_and_play();
+                bStop.setEnabled(true);
             }
         });
 
@@ -181,20 +152,7 @@ public class MainActivity extends AppCompatActivity implements GetFetchedURL{
         bStop.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                bPlay.setImageResource(R.drawable.play); // Set play button image to normal.
-                //bStop.setImageResource(R.drawable.stop_pressed); // Set stop button image to pressed.
-                // Standard practice to initialize media player (copied from internet) --> START
-                if(mPlayer!=null) {
-                    if(mPlayer.isPlaying()) {
-                        mPlayer.stop();
-                    }
-                    mPlayer.reset();
-                    mPlayer.release();
-                    mPlayer=null;
-                }
-                // Standard practice to initialize media player (copied from internet) --> END
-                bPlay.setEnabled(true);
-
+            stop();
             }
         });
 
@@ -209,6 +167,7 @@ public class MainActivity extends AppCompatActivity implements GetFetchedURL{
                     mPlayer.reset();
                     mPlayer.release();
                     mPlayer=null;
+                    ReleaseWifiLock();
                 }
                 // Standard practice to initialize media player (copied from internet) --> END
 
@@ -218,6 +177,28 @@ public class MainActivity extends AppCompatActivity implements GetFetchedURL{
                 MainActivity.this.finish();
             }
         });
+    }
+
+    private void stop() {
+
+            bPlay.setImageResource(R.drawable.play); // Set play button image to normal.
+            //bStop.setImageResource(R.drawable.stop_pressed); // Set stop button image to pressed.
+            // Standard practice to initialize media player (copied from internet) --> START
+            if(mPlayer!=null) {
+                if(mPlayer.isPlaying()) {
+                    mPlayer.stop();
+                }
+                mPlayer.reset();
+                mPlayer.release();
+                mPlayer=null;
+                ReleaseWifiLock();
+            }
+            // Standard practice to initialize media player (copied from internet) --> END
+            bPlay.setEnabled(true);
+            status.setText("Stopped");
+
+
+
     }
 
     private void pause() {
@@ -231,20 +212,22 @@ public class MainActivity extends AppCompatActivity implements GetFetchedURL{
 
     private void play() {
 
-        if (mPlayer != null) {
+        if ((mPlayer != null) && (streamURL != null)) {
             if (!mPlayer.isPlaying()) {
+                //mPlayer.setWakeMode(this,PowerManager.PARTIAL_WAKE_LOCK);
                 bPlay.setEnabled(false);
                 bPlay.setImageResource(R.drawable.play_pressed);
+                status.setText("Starting...");
                 // mPlayer.reset(); // Not Needed after adding the standard practice code in bPlay
 
                 try {
                     //String STREAM_URL = "http://bbcwssc.ic.llnwd.net/stream/bbcwssc_mp1_ws-araba"; // Use the static address in case there is a probloem with the site.
-                    streamAddress = streamURL; // trim(): Returns a string whose value is this string, with any leading and trailing whitespace removed.
+                    final String streamAddress = streamURL;
 
-                    Toast.makeText(this, "URL is : " + streamAddress,
-                            Toast.LENGTH_LONG).show();
+
                     mPlayer.setDataSource(streamAddress);
                     mPlayer.prepareAsync();
+
                 /*
                 //######################################################
 
@@ -261,19 +244,102 @@ public class MainActivity extends AppCompatActivity implements GetFetchedURL{
                         @Override
                         public void onPrepared(MediaPlayer mediaPlayer) {
                             Toast.makeText(MainActivity.this, "Connected", Toast.LENGTH_SHORT).show();
+                            status.setText("Connected");
                             mediaPlayer.start();
+                        }
+                    });
+
+                    mPlayer.setOnInfoListener(new MediaPlayer.OnInfoListener() {
+                        @Override
+                        public boolean onInfo(MediaPlayer mp, int what, int extra) {
+                            mPlyer_info.setText("what : " + what + " extra : " + extra);
+                            if (what == MediaPlayer.MEDIA_INFO_BUFFERING_START )
+                                status.setText("Buffering...");
+                            if (what == MediaPlayer.MEDIA_INFO_BUFFERING_END )
+                                status.setText("Connected");
+
+                            return false;
+                        }
+                    });
+
+                    mPlayer.setOnErrorListener(new MediaPlayer.OnErrorListener() {
+                        @Override
+                        public boolean onError(MediaPlayer mp, int what, int extra) {
+                            mPlyer_info.setText("Error What: " + what + " Error extra: " + extra);
+                           reinitialize();
+                            return false;
                         }
                     });
 
                 } catch (IOException e) {
                     e.printStackTrace();
-                    Toast.makeText(this, "Error " + e, Toast.LENGTH_LONG).show();
+                    Log.e(TAG, "play: " + e);
                 }
+
             }
         }
+
+        if (streamURL == null ) {
+
+            Toast.makeText(this, "Internet slow or not connected \n Reconect then restart App.", Toast.LENGTH_SHORT).show();
+            stop();
+
+
+
+        }else if (!streamURL.contains("http")) {
+            Toast.makeText(this, "Internet slow or not connected", Toast.LENGTH_SHORT).show();
+            stop();
+        }
+
+
+
+    }
+
+    private void reinitialize() {
+        stop();
+        initialize_and_play();
+    }
+
+    private void initialize_and_play() {
+
+        // mPlayer initialization is moved here because setting mPlayer to null in bStop then pressing bPlay caused Fatal Error. ---START
+        mPlayer = new MediaPlayer();
+        mPlayer.setAudioStreamType(AudioManager.STREAM_MUSIC);
+        mPlayer.setWakeMode(this, PowerManager.PARTIAL_WAKE_LOCK);
+        AcquireWifiLock();
+
+        // mPlayer initialization is moved here because setting mPlayer to null in bStop then pressing bPlay caused Fatal Error. ---END
+
+        // Request Audio Focus ---------------------------------------------------------------------
+        int result = mAudioManager.requestAudioFocus(mOnAudioFocusChangeListener,
+                // Hint: the music stream.
+                AudioManager.STREAM_MUSIC,
+                // Request permanent focus.
+                AudioManager.AUDIOFOCUS_GAIN);
+        //-------------------------------------------------------------------------------------------
+
+        if (result==AudioManager.AUDIOFOCUS_REQUEST_GRANTED){
+            play();
+        }
+
     }
 
 
+    /// Lock the wifi so we can still stream under lock screen
+    private void AcquireWifiLock()
+    {
+
+        wifiLock = ((WifiManager) getApplicationContext().getSystemService(WIFI_SERVICE))
+                .createWifiLock(WifiManager.WIFI_MODE_FULL, "Osama WiFi Lock");
+
+        wifiLock.acquire();
+    }
+
+    /// This will release the wifi lock if it is no longer needed
+    private void ReleaseWifiLock()
+    {
+        wifiLock.release();
+    }
 
 }
 

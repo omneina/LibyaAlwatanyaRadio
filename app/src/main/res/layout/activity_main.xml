@@ -7,14 +7,33 @@
     tools:context=".MainActivity"
     android:background="@drawable/libya_watanya_benghazi"
     >
-
+    <LinearLayout
+        android:id="@+id/Status_Container"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="240dp"
+        android:orientation="vertical"
+        android:gravity="center"
+        app:layout_constraintBottom_toBottomOf="parent"
+        android:layoutDirection="ltr">
+        <TextView
+            android:id="@+id/tvInfo"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textColor="@android:color/black"
+            android:text="Info"
+            android:layout_marginBottom="25dp"
+            />
     <TextView
         android:id="@+id/tvStatus"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:textColor="@android:color/black"
         android:text="Status"
         />
 
+
+    </LinearLayout>
     <LinearLayout
         android:id="@+id/PlayStop_Container"
         android:layout_width="match_parent"
