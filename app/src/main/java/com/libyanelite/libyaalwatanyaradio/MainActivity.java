@@ -262,8 +262,25 @@ public class MainActivity extends AppCompatActivity /* implements GetFetchedURL 
                         public void onPrepared(MediaPlayer mediaPlayer) {
                             Toast.makeText(MainActivity.this, R.string.Connected, Toast.LENGTH_SHORT).show();
                             status.setText(R.string.Connected);
-                            mediaPlayer.start();
 
+                            // This was Added to prevent radio from playing while user is in-call session.
+                            // This caused by the delay in connection while receiving a call, then when in call if the connection is
+                            // done the radio will play while the user is still in-call.
+                            //===================================================================================
+                            int result = mAudioManager.requestAudioFocus(mOnAudioFocusChangeListener,
+                                    // Hint: the music stream.
+                                    AudioManager.STREAM_MUSIC,
+                                    // Request permanent focus.
+                                    AudioManager.AUDIOFOCUS_GAIN);
+
+                            if (result == AudioManager.AUDIOFOCUS_REQUEST_GRANTED) {
+
+                                mediaPlayer.start();
+                            }
+                            else {
+                                pause();
+                            }
+                            //====================================================================================
                         }
                     });
 
