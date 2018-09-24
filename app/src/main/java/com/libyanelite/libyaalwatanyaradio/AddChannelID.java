@@ -25,6 +25,7 @@ public class AddChannelID extends Application {
             channel.setDescription("Radio Libya Alwatanya Channel");
 
             NotificationManager manager = getSystemService(NotificationManager.class);
+            assert manager != null;
             manager.createNotificationChannel(channel);
 
         }

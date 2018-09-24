@@ -3,9 +3,9 @@
     <string name="app_name">Libya Alwatanya Radio</string>
     <string name="libyanelite">شركة النخبة الليبية <a href="http://libyanelite.com/">http://libyanelite.com/</a></string>
     <string name="Stopped">متوقف</string>
-    <string name="Starting">تجهيز...</string>
+    <string name="Starting">تجهيز…</string>
     <string name="Connected">مُتصل</string>
-    <string name="Buffering">تحميل...</string>
+    <string name="Buffering">تحميل…</string>
     <string name="NoInternet">لا يوجد أنترنت</string>
     <string name="FailedToGetURL">فشل الحصول على البث. الإنترنت ربما بطيء أو غير متصل.</string>
     <string name="notification_Title">إذاعة ليبيا الوطنية</string>
