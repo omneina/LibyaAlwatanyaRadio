@@ -4,8 +4,10 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:layout_gravity="center"
     tools:context=".MainActivity"
     android:background="@drawable/libya_watanya_benghazi"
+    android:id="@+id/topLayout"
     >
     <LinearLayout
         android:id="@+id/Status_Container"
@@ -15,109 +17,110 @@
         android:orientation="vertical"
         android:gravity="center"
         app:layout_constraintBottom_toBottomOf="parent"
-        android:layoutDirection="ltr">
-        <TextView
-            android:id="@+id/tvInfo"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:textColor="@android:color/black"
-            android:text="Info"
-            android:layout_marginBottom="25dp"
-            />
-    <TextView
-        android:id="@+id/tvStatus"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:textColor="@android:color/black"
-        android:text="Status"
-        />
+        android:layoutDirection="ltr"
 
-
-    </LinearLayout>
-    <LinearLayout
-        android:id="@+id/PlayStop_Container"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginBottom="160dp"
-        android:orientation="horizontal"
-        android:gravity="center"
-        app:layout_constraintBottom_toBottomOf="parent"
-        android:layoutDirection="ltr">
-
-        <ImageButton
-            android:id="@+id/bPlay"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:adjustViewBounds="false"
-            android:cropToPadding="false"
-            android:visibility="visible"
-            app:srcCompat="@drawable/play_selector"
-            android:background="@android:color/transparent"
-            />
-
-        <ImageButton
-            android:id="@+id/bStop"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:adjustViewBounds="false"
-            android:cropToPadding="false"
-            android:visibility="visible"
-            app:srcCompat="@drawable/stop"
-            android:background="@android:color/transparent"
-            />
-
-
-
-    </LinearLayout>
-
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginBottom="40dp"
-        android:orientation="horizontal"
-        android:gravity="center"
-        app:layout_constraintBottom_toBottomOf="parent">
-
-        <ImageButton
-            android:id="@+id/bClose"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:adjustViewBounds="false"
-            android:cropToPadding="false"
-            android:visibility="visible"
-            app:srcCompat="@drawable/close"
-            android:background="@android:color/transparent"
-            />
-
-
-
-    </LinearLayout>
-
-
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginBottom="00dp"
-        android:orientation="horizontal"
-        android:gravity="center"
-        app:layout_constraintBottom_toBottomOf="parent"
-        android:background="@color/white"
         >
 
-        <TextView
-            android:id="@+id/txtLostpassword"
+        <ProgressBar
+            android:id="@+id/pbLoading"
+            android:visibility="invisible"
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center"
-            android:autoLink="web"
-            android:gravity="center"
-            android:padding="20px"
-            android:text="@string/libyanelite"
-            android:textSize="18dp"
-            android:textStyle="bold"
-            />
+            android:layout_height="wrap_content" />
+
+            <TextView
+                android:id="@+id/tvStatus"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textColor="@android:color/black"
+                android:text="@string/status"
+                />
 
 
-    </LinearLayout>
+            </LinearLayout>
+            <LinearLayout
+                android:id="@+id/PlayStop_Container"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="160dp"
+                android:orientation="horizontal"
+                android:gravity="center"
+                app:layout_constraintBottom_toBottomOf="parent"
+                android:layoutDirection="ltr">
 
-</android.support.constraint.ConstraintLayout>
+                <ImageButton
+                    android:id="@+id/bPlay"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:adjustViewBounds="false"
+                    android:cropToPadding="false"
+                    android:visibility="visible"
+                    app:srcCompat="@drawable/play_selector"
+                    android:background="@android:color/transparent"
+                    />
+
+                <ImageButton
+                    android:id="@+id/bStop"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:adjustViewBounds="false"
+                    android:cropToPadding="false"
+                    android:visibility="visible"
+                    app:srcCompat="@drawable/stop"
+                    android:background="@android:color/transparent"
+                    />
+
+
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="40dp"
+                android:orientation="horizontal"
+                android:gravity="center"
+                app:layout_constraintBottom_toBottomOf="parent">
+
+                <ImageButton
+                    android:id="@+id/bClose"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:adjustViewBounds="false"
+                    android:cropToPadding="false"
+                    android:visibility="visible"
+                    app:srcCompat="@drawable/close"
+                    android:background="@android:color/transparent"
+                    />
+
+
+
+            </LinearLayout>
+
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="00dp"
+                android:orientation="horizontal"
+                android:gravity="center"
+                app:layout_constraintBottom_toBottomOf="parent"
+                android:background="@color/white"
+                >
+
+                <TextView
+                    android:id="@+id/txtLostpassword"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:autoLink="web"
+                    android:gravity="center"
+                    android:padding="20px"
+                    android:text="@string/libyanelite"
+                    android:textSize="18dp"
+                    android:textStyle="bold"
+                    />
+
+
+            </LinearLayout>
+
+        </android.support.constraint.ConstraintLayout>

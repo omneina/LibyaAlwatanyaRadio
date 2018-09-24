@@ -1,4 +1,14 @@
 <resources>
     <string name="app_name">Libya Alwatanya Radio</string>
-    <string name="libyanelite">شركة النخبة الليبية <a href="http://libyanelite.com/">http://libyanelite.com/</a></string>
+    <string name="libyanelite">Libyan Elite Co. <a href="http://libyanelite.com/">http://libyanelite.com/</a></string>
+    <string name="Stopped">Stopped</string>
+    <string name="Starting">Starting...</string>
+    <string name="Connected">Connected</string>
+    <string name="Buffering">Buffering...</string>
+    <string name="NoInternet">Internet is not available</string>
+    <string name="FailedToGetURL">Failed to get Stream. Internet maybe slow or disconnected.</string>
+    <string name="notification_Title">Radio Libya Alwatanya</string>
+    <string name="notification_Description">Press to return to app</string>
+    <string name="status">Status</string>
+
 </resources>
