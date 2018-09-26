@@ -16,7 +16,6 @@ import android.support.constraint.ConstraintLayout;
 import android.support.v4.app.NotificationCompat;
 import android.support.v4.app.NotificationManagerCompat;
 import android.support.v7.app.AppCompatActivity;
-import android.util.Log;
 import android.view.KeyEvent;
 import android.view.View;
 import android.widget.ImageButton;
@@ -40,7 +39,7 @@ public class MainActivity extends AppCompatActivity /* implements GetFetchedURL 
     private ImageButton bPlay;
     private MediaPlayer mPlayer;
     private AudioManager.OnAudioFocusChangeListener mOnAudioFocusChangeListener;
-    private static final String TAG = "Osama Mneina";
+   // private static final String TAG = "Osama Mneina";
     private AudioManager mAudioManager;
     private String streamURL;
     private TextView status;
@@ -51,15 +50,15 @@ public class MainActivity extends AppCompatActivity /* implements GetFetchedURL 
 
 
 
-
-
     @Override
-    public boolean onKeyDown(int keyCode, KeyEvent event) {
+    public boolean onKeyUp(int keyCode, KeyEvent event) {
         if ((keyCode == KeyEvent.KEYCODE_BACK)) {
-            Log.d(this.getClass().getName(), "back button pressed");
-            keyCode = KeyEvent.KEYCODE_HOME;
+           // Log.d(this.getClass().getName(), "back button pressed");
+
+          keyCode = KeyEvent.KEYCODE_HOME;
+           moveTaskToBack(true);
         }
-        return super.onKeyDown(keyCode, event);
+        return super.onKeyUp(keyCode, event);
     }
 
     @Override
@@ -108,7 +107,7 @@ public class MainActivity extends AppCompatActivity /* implements GetFetchedURL 
             public void onAudioFocusChange(int focusChange) {
                 switch (focusChange) {
                     case AudioManager.AUDIOFOCUS_GAIN:
-                        Log.i(TAG, "AUDIOFOCUS_GAIN");
+                       // Log.i(TAG, "AUDIOFOCUS_GAIN");
                         if (mPlayer != null) {
                             mPlayer.start();
                         }
@@ -118,25 +117,25 @@ public class MainActivity extends AppCompatActivity /* implements GetFetchedURL 
 
                         break;
                     case AudioManager.AUDIOFOCUS_GAIN_TRANSIENT:
-                        Log.i(TAG, "AUDIOFOCUS_GAIN_TRANSIENT");
+                      //  Log.i(TAG, "AUDIOFOCUS_GAIN_TRANSIENT");
                         break;
                     case AudioManager.AUDIOFOCUS_GAIN_TRANSIENT_MAY_DUCK:
-                        Log.i(TAG, "AUDIOFOCUS_GAIN_TRANSIENT_MAY_DUCK");
+                     //   Log.i(TAG, "AUDIOFOCUS_GAIN_TRANSIENT_MAY_DUCK");
                         break;
                     case AudioManager.AUDIOFOCUS_LOSS:
-                        Log.i(TAG, "AUDIOFOCUS_LOSS");
+                     //   Log.i(TAG, "AUDIOFOCUS_LOSS");
                         stop();
                         break;
                     case AudioManager.AUDIOFOCUS_LOSS_TRANSIENT:
-                        Log.i(TAG, "AUDIOFOCUS_LOSS_TRANSIENT");
+                     //   Log.i(TAG, "AUDIOFOCUS_LOSS_TRANSIENT");
                         pause();
                         break;
                     case AudioManager.AUDIOFOCUS_LOSS_TRANSIENT_CAN_DUCK:
-                        Log.i(TAG, "AUDIOFOCUS_LOSS_TRANSIENT_CAN_DUCK");
+                    //    Log.i(TAG, "AUDIOFOCUS_LOSS_TRANSIENT_CAN_DUCK");
                         pause();
                         break;
                     case AudioManager.AUDIOFOCUS_REQUEST_FAILED:
-                        Log.i(TAG, "AUDIOFOCUS_REQUEST_FAILED");
+                     //   Log.i(TAG, "AUDIOFOCUS_REQUEST_FAILED");
                         stop();
                         break;
                     default:
@@ -193,7 +192,7 @@ public class MainActivity extends AppCompatActivity /* implements GetFetchedURL 
     }
 
     private void stop() {
-        Log.i(TAG, "stop() Method started");
+       // Log.i(TAG, "stop() Method started");
         progressBar.setVisibility(View.INVISIBLE);
             bPlay.setImageResource(R.drawable.play); // Set play button image to normal.
             //bStop.setImageResource(R.drawable.stop_pressed); // Set stop button image to pressed.
@@ -308,7 +307,7 @@ public class MainActivity extends AppCompatActivity /* implements GetFetchedURL 
 
                 } catch (IOException e) {
                     e.printStackTrace();
-                    Log.e(TAG, "play: " + e);
+                   // Log.e(TAG, "play: " + e);
                 }
 
             }
@@ -342,7 +341,7 @@ public class MainActivity extends AppCompatActivity /* implements GetFetchedURL 
         mTopLayout.setBackgroundResource(R.drawable.libya_watanya_benghazi_lighton);
 
 
-            Log.i(TAG, "initialize_and_play: Done Getting URL : " + streamURL);
+          //  Log.i(TAG, "initialize_and_play: Done Getting URL : " + streamURL);
 
 
 
@@ -422,9 +421,9 @@ public class MainActivity extends AppCompatActivity /* implements GetFetchedURL 
                 in.close();
 
             } catch (MalformedURLException e) {
-                Log.e(TAG, "doInBackground - Malformed URL Exception :" + e.toString(), e);
+              //  Log.e(TAG, "doInBackground - Malformed URL Exception :" + e.toString(), e);
             } catch (IOException e) {
-                Log.e(TAG, "doInBackground - IO Exception :" + e.toString(), e);
+              //  Log.e(TAG, "doInBackground - IO Exception :" + e.toString(), e);
             }
             // Fetch URL Remotely ------------------------------END
 
@@ -436,7 +435,7 @@ public class MainActivity extends AppCompatActivity /* implements GetFetchedURL 
             super.onPostExecute(o);
             streamURL = o;
             progressBar.setVisibility(View.INVISIBLE);
-            Log.i(TAG, "onPostExecute: Done Fething URL : "+streamURL);
+           // Log.i(TAG, "onPostExecute: Done Fething URL : "+streamURL);
           //  Toast.makeText(MainActivity.this, "Done Fetching URL" + o, Toast.LENGTH_SHORT).show();
 
         }
