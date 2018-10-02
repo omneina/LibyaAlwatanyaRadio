@@ -10,5 +10,8 @@
     <string name="notification_Title">Radio Libya Alwatanya</string>
     <string name="notification_Description">Press to return to app</string>
     <string name="status">Status</string>
+    <string name="PlayButton">Play</string>
+    <string name="StopButton">Stop</string>
+    <string name="CloseButton">Close</string>
 
 </resources>

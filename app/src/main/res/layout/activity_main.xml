@@ -6,95 +6,100 @@
     android:layout_height="match_parent"
     android:layout_gravity="center"
     tools:context=".MainActivity"
-    android:background="@drawable/libya_watanya_benghazi"
+
     android:id="@+id/topLayout"
     >
+
     <LinearLayout
         android:id="@+id/Status_Container"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginBottom="240dp"
-        android:orientation="vertical"
+        android:layout_height="80dp"
+
         android:gravity="center"
-        app:layout_constraintBottom_toBottomOf="parent"
         android:layoutDirection="ltr"
+        android:orientation="vertical"
+        app:layout_constraintBottom_toTopOf="@id/PlayStop_Container"
 
         >
 
         <ProgressBar
             android:id="@+id/pbLoading"
-            android:visibility="invisible"
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content" />
+            android:layout_height="wrap_content"
+            android:visibility="invisible" />
 
-            <TextView
-                android:id="@+id/tvStatus"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:textColor="@android:color/black"
-                android:text="@string/status"
-                />
+        <TextView
+            android:id="@+id/tvStatus"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:background="@color/white"
+            android:padding="3dp"
+            android:text="@string/status"
+            android:textColor="@android:color/black"
+            android:textSize="18sp" />
 
 
-            </LinearLayout>
+    </LinearLayout>
             <LinearLayout
                 android:id="@+id/PlayStop_Container"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginBottom="160dp"
                 android:orientation="horizontal"
                 android:gravity="center"
-                app:layout_constraintBottom_toBottomOf="parent"
-                android:layoutDirection="ltr">
+                android:layoutDirection="ltr"
+                app:layout_constraintBottom_toTopOf="@id/close_PBarContainer"
+                >
 
                 <ImageButton
                     android:id="@+id/bPlay"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:adjustViewBounds="false"
-                    android:cropToPadding="false"
-                    android:visibility="visible"
                     app:srcCompat="@drawable/play_selector"
                     android:background="@android:color/transparent"
-                    />
+                    android:contentDescription="@string/PlayButton" />
 
                 <ImageButton
                     android:id="@+id/bStop"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:adjustViewBounds="false"
-                    android:cropToPadding="false"
-                    android:visibility="visible"
                     app:srcCompat="@drawable/stop"
                     android:background="@android:color/transparent"
-                    />
+                    android:contentDescription="@string/StopButton" />
 
 
 
             </LinearLayout>
 
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginBottom="40dp"
-                android:orientation="horizontal"
-                android:gravity="center"
-                app:layout_constraintBottom_toBottomOf="parent">
-
-                <ImageButton
-                    android:id="@+id/bClose"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:adjustViewBounds="false"
-                    android:cropToPadding="false"
-                    android:visibility="visible"
-                    app:srcCompat="@drawable/close"
-                    android:background="@android:color/transparent"
-                    />
+    <RelativeLayout
+        android:id="@+id/close_PBarContainer"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center"
+        android:orientation="horizontal"
+        app:layout_constraintBottom_toTopOf="@id/lbyanEliteURL"
+        android:paddingBottom="10dp">
 
 
+        <ImageButton
+            android:id="@+id/bClose"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:background="@android:color/transparent"
+            android:contentDescription="@string/CloseButton"
+            app:srcCompat="@drawable/close"
+            android:layout_centerHorizontal="true"
+            />
+        <SeekBar
+            android:id="@+id/volSeekbar"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/bClose"
+            android:thumb="@drawable/custom_progress_bar_thumb"
 
-            </LinearLayout>
+            />
+
+
+    </RelativeLayout>
 
 
             <LinearLayout
@@ -105,19 +110,21 @@
                 android:gravity="center"
                 app:layout_constraintBottom_toBottomOf="parent"
                 android:background="@color/white"
+                android:id="@+id/lbyanEliteURL"
                 >
 
                 <TextView
-                    android:id="@+id/txtLostpassword"
+                    android:id="@+id/libyanElite"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center"
                     android:autoLink="web"
                     android:gravity="center"
-                    android:padding="20px"
+                    android:padding="5dp"
                     android:text="@string/libyanelite"
-                    android:textSize="18dp"
+                    android:textSize="16sp"
                     android:textStyle="bold"
+                    android:textColor="@color/colorPrimaryDark"
                     />
 
 

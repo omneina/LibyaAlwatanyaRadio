@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="app_name">Libya Alwatanya Radio</string>
+    <string name="app_name">إذاعة ليبيا الوطنية</string>
     <string name="libyanelite">شركة النخبة الليبية <a href="http://libyanelite.com/">http://libyanelite.com/</a></string>
     <string name="Stopped">متوقف</string>
     <string name="Starting">تجهيز…</string>
@@ -11,4 +11,7 @@
     <string name="notification_Title">إذاعة ليبيا الوطنية</string>
     <string name="notification_Description">إضغط للرجوع للتطبيق</string>
     <string name="status">الحالة</string>
+    <string name="PlayButton">تشغيل</string>
+    <string name="StopButton">توقيف</string>
+    <string name="CloseButton">إغلاق التطبيق</string>
 </resources>

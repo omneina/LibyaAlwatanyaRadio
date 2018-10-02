@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="app_name">Libya Alwatanya Radio</string>
+    <string name="app_name">إذاعة ليبيا الوطنية</string>
     <string name="Buffering">تحميل…</string>
     <string name="Connected">مُتصل</string>
     <string name="FailedToGetURL">فشل الحصول على البث. الإنترنت ربما بطيء أو غير متصل.</string>
@@ -11,4 +11,7 @@
     <string name="Starting">تجهيز…</string>
     <string name="Stopped">متوقف</string>
     <string name="status">الحالة</string>
+    <string name="PlayButton">تشغيل</string>
+    <string name="StopButton">توقيف</string>
+    <string name="CloseButton">إغلاق التطبيق</string>
 </resources>

@@ -20,6 +20,7 @@ import android.view.KeyEvent;
 import android.view.View;
 import android.widget.ImageButton;
 import android.widget.ProgressBar;
+import android.widget.SeekBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -40,6 +41,7 @@ public class MainActivity extends AppCompatActivity /* implements GetFetchedURL 
     private MediaPlayer mPlayer;
     private AudioManager.OnAudioFocusChangeListener mOnAudioFocusChangeListener;
    // private static final String TAG = "Osama Mneina";
+   private SeekBar volumeSeekbar;
     private AudioManager mAudioManager;
     private String streamURL;
     private TextView status;
@@ -94,7 +96,8 @@ public class MainActivity extends AppCompatActivity /* implements GetFetchedURL 
 
 
 // Hook to audio service ----------------------------------------------------------------
-        mAudioManager = (AudioManager) getSystemService(Context.AUDIO_SERVICE);
+       // mAudioManager = (AudioManager) getSystemService(Context.AUDIO_SERVICE);
+        initControls();
 
 
 //--------------------------------------------------------------------------------------
@@ -395,7 +398,7 @@ public class MainActivity extends AppCompatActivity /* implements GetFetchedURL 
 
      class GetURL extends AsyncTask<Void,Integer,String>  {
 
-        private final static String TAG = "OSAMA MNEINA";
+       // private final static String TAG = "OSAMA MNEINA";
 
         @Override
         protected void onPreExecute() {
@@ -474,6 +477,44 @@ private void createNotification(){
     notificationManager.notify(1,notification);
 
 }
+
+    private void initControls()
+    {
+        try
+        {
+            volumeSeekbar = (SeekBar)findViewById(R.id.volSeekbar);
+            mAudioManager = (AudioManager) getSystemService(Context.AUDIO_SERVICE);
+            volumeSeekbar.setMax(mAudioManager
+                    .getStreamMaxVolume(AudioManager.STREAM_MUSIC));
+            volumeSeekbar.setProgress(mAudioManager
+                    .getStreamVolume(AudioManager.STREAM_MUSIC));
+
+
+            volumeSeekbar.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener()
+            {
+                @Override
+                public void onStopTrackingTouch(SeekBar arg0)
+                {
+                }
+
+                @Override
+                public void onStartTrackingTouch(SeekBar arg0)
+                {
+                }
+
+                @Override
+                public void onProgressChanged(SeekBar arg0, int progress, boolean arg2)
+                {
+                    mAudioManager.setStreamVolume(AudioManager.STREAM_MUSIC,
+                            progress, 0);
+                }
+            });
+        }
+        catch (Exception e)
+        {
+
+        }
+    }
 }
 
 
