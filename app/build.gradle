@@ -1,4 +1,6 @@
 apply plugin: 'com.android.application'
+apply plugin: 'io.fabric'
+
 
 android {
     compileSdkVersion 27
@@ -6,8 +8,8 @@ android {
         applicationId "com.libyanelite.libyaalwatanyaradio"
         minSdkVersion 15
         targetSdkVersion 27
-        versionCode 2
-        versionName "0.91 Beta"
+        versionCode 4
+        versionName "0.93 Beta"
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
     }
     buildTypes {
@@ -24,7 +26,20 @@ dependencies {
     implementation fileTree(include: ['*.jar'], dir: 'libs')
     implementation 'com.android.support:appcompat-v7:27.1.1'
     implementation 'com.android.support.constraint:constraint-layout:1.1.3'
-    testImplementation 'junit:junit:4.12'
-    androidTestImplementation 'com.android.support.test:runner:1.0.2'
-    androidTestImplementation 'com.android.support.test.espresso:espresso-core:3.0.2'
+    // testImplementation 'junit:junit:4.12'
+    // androidTestImplementation 'com.android.support.test:runner:1.0.2'
+    // androidTestImplementation 'com.android.support.test.espresso:espresso-core:3.0.2'
+
+    // Check that your Firebase dependency is up-to-date:
+    implementation 'com.google.firebase:firebase-core:16.0.6'
+
+    // Add the Crashlytics dependancy:
+    implementation 'com.crashlytics.sdk.android:crashlytics:2.9.7'
+
+
+    // Add the In-App Messaging dependency:
+    //implementation 'com.google.firebase:firebase-inappmessaging-display:17.0.4'
+
 }
+
+apply plugin: 'com.google.gms.google-services'

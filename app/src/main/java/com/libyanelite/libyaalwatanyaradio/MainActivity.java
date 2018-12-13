@@ -1,36 +1,36 @@
 package com.libyanelite.libyaalwatanyaradio;
 
-import android.app.Notification;
-import android.app.PendingIntent;
 import android.content.Context;
-import android.content.Intent;
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.media.AudioManager;
 import android.media.MediaPlayer;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.os.Handler;
 import android.support.constraint.ConstraintLayout;
-import android.support.v4.app.NotificationCompat;
-import android.support.v4.app.NotificationManagerCompat;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
 import android.view.KeyEvent;
 import android.view.View;
+import android.widget.DigitalClock;
 import android.widget.ImageButton;
 import android.widget.ProgressBar;
 import android.widget.SeekBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.google.firebase.analytics.FirebaseAnalytics;
+
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.net.MalformedURLException;
 import java.net.URL;
-
-import static com.libyanelite.libyaalwatanyaradio.AddChannelID.CHANNEL_ID;
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
+import java.util.Date;
+import java.util.Locale;
 
 
 public class MainActivity extends AppCompatActivity /* implements GetFetchedURL */{
@@ -40,14 +40,13 @@ public class MainActivity extends AppCompatActivity /* implements GetFetchedURL 
     private ImageButton bPlay;
     private MediaPlayer mPlayer;
     private AudioManager.OnAudioFocusChangeListener mOnAudioFocusChangeListener;
-   // private static final String TAG = "Osama Mneina";
-   private SeekBar volumeSeekbar;
     private AudioManager mAudioManager;
     private String streamURL;
     private TextView status;
     private ConstraintLayout mTopLayout;
-    private NotificationManagerCompat notificationManager;
+    // private NotificationManagerCompat notificationManager;
     private ProgressBar progressBar;
+    private TextView localTime;
 
 
 
@@ -67,14 +66,52 @@ public class MainActivity extends AppCompatActivity /* implements GetFetchedURL 
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
+/* Crash Test Button !      S T A R T
+
+        Button crashButton = new Button(this);
+        crashButton.setText("Crash!");
+        crashButton.setOnClickListener(new View.OnClickListener() {
+            public void onClick(View view) {
+                Crashlytics.getInstance().crash(); // Force a crash
+            }
+        });
+
+        addContentView(crashButton, new ViewGroup.LayoutParams(
+                ViewGroup.LayoutParams.MATCH_PARENT,
+                ViewGroup.LayoutParams.WRAP_CONTENT));
+
+
+      Crash Test Button !     E N D  */
+
         status = findViewById(R.id.tvStatus);
         mTopLayout =  findViewById(R.id.topLayout);
         progressBar = findViewById(R.id.pbLoading);
         bPlay =  findViewById(R.id.bPlay);
+        localTime = findViewById(R.id.Local_Time);
+
+        // Display Local Time ----------------- S T A R T
+        final String[] time = {null};
+        final Handler handler = new Handler(getMainLooper());
+        handler.postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                time[0] = new SimpleDateFormat("HH:mm", Locale.UK).format(new Date());
+                localTime.setText(time[0]);
+                time[0]=null;
+
+                handler.postDelayed(this, 1000);
+            }
+        }, 10);
+
+        // Display Local Time ----------------- E N D
+
+
         final ImageButton bStop = findViewById(R.id.bStop);bStop.setEnabled(false);
         final ImageButton bClose = findViewById(R.id.bClose);
-        notificationManager = NotificationManagerCompat.from(this);
-        createNotification();
+        // notificationManager = NotificationManagerCompat.from(this);
+        // createNotification();
+        FirebaseAnalytics mFirebaseAnalytics = FirebaseAnalytics.getInstance(this);
 
         if (inetConnection()){
             mTopLayout.setBackgroundResource(R.drawable.libya_watanya_benghazi_lighton);
@@ -186,7 +223,7 @@ public class MainActivity extends AppCompatActivity /* implements GetFetchedURL 
                 // Standard practice to initialize media player (copied from internet) --> END
 
                 mAudioManager.abandonAudioFocus(mOnAudioFocusChangeListener);
-                notificationManager.cancel(1);
+                // notificationManager.cancel(1);
 
                 // System.exit(0);
                 MainActivity.this.finish();
@@ -448,6 +485,7 @@ public class MainActivity extends AppCompatActivity /* implements GetFetchedURL 
 
 
     }
+    /* Suspend notification - causes some delay in some phones
 private void createNotification(){
 
     // This intent was used because the standard intent syntax will make new instance of MainActivity each time the notification is clicked
@@ -477,12 +515,14 @@ private void createNotification(){
     notificationManager.notify(1,notification);
 
 }
+    */
 
     private void initControls()
     {
         try
         {
-            volumeSeekbar = (SeekBar)findViewById(R.id.volSeekbar);
+            // private static final String TAG = "Osama Mneina";
+            SeekBar volumeSeekbar = findViewById(R.id.volSeekbar);
             mAudioManager = (AudioManager) getSystemService(Context.AUDIO_SERVICE);
             volumeSeekbar.setMax(mAudioManager
                     .getStreamMaxVolume(AudioManager.STREAM_MUSIC));
