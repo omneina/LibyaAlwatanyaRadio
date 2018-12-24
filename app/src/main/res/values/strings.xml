@@ -6,12 +6,17 @@
     <string name="Connected">Connected</string>
     <string name="Buffering">Buffering…</string>
     <string name="NoInternet">Internet is not available</string>
-    <string name="FailedToGetURL">Failed to get Stream. Internet maybe slow or disconnected.</string>
+    <string name="FailedToGetURL">Internet maybe slow or disconnected.</string>
     <string name="notification_Title">Radio Libya Alwatanya</string>
     <string name="notification_Description">Press to return to app</string>
     <string name="status">Status</string>
     <string name="PlayButton">Play</string>
     <string name="StopButton">Stop</string>
     <string name="CloseButton">Close</string>
+    <string name="Local_Time">Local Time :</string>
+    <string name="Server_Down">Streaming Server is Down Temporarily</string>
+    <string name="ShareTheApp">Download Alwatanya Radio App from Google Play:</string>
+    <string name="AppDownloadURL" translatable="false">https://play.google.com/store/apps/details?id=com.libyanelite.libyaalwatanyaradio</string>
+    <string name="share_the_app">Share the App</string>
 
 </resources>

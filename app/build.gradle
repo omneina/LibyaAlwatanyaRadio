@@ -29,17 +29,12 @@ dependencies {
     // testImplementation 'junit:junit:4.12'
     // androidTestImplementation 'com.android.support.test:runner:1.0.2'
     // androidTestImplementation 'com.android.support.test.espresso:espresso-core:3.0.2'
-
     // Check that your Firebase dependency is up-to-date:
     implementation 'com.google.firebase:firebase-core:16.0.6'
-
     // Add the Crashlytics dependancy:
     implementation 'com.crashlytics.sdk.android:crashlytics:2.9.7'
-
-
     // Add the In-App Messaging dependency:
     //implementation 'com.google.firebase:firebase-inappmessaging-display:17.0.4'
-
 }
 
 apply plugin: 'com.google.gms.google-services'

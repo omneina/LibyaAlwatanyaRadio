@@ -1,8 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.libyanelite.libyaalwatanyaradio">
-    <uses-permission android:name="android.permission.INTERNET"></uses-permission>
-    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE"></uses-permission>
+
+    <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
+
     <application
         android:allowBackup="true"
         android:icon="@mipmap/libya_alwatanya_radio"
@@ -10,16 +12,28 @@
         android:roundIcon="@mipmap/libya_alwatanya_radio_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".MainActivity"
-            android:theme="@style/Theme.AppCompat.NoActionBar"
+        <activity
+            android:name=".MainActivity"
             android:screenOrientation="portrait"
-            >
+            android:theme="@style/Theme.AppCompat.DayNight.DarkActionBar">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
+            <intent-filter>
+                <action android:name="android.intent.action.VIEW" />
+
+                <category android:name="android.intent.category.DEFAULT" />
+                <category android:name="android.intent.category.BROWSABLE" />
+
+                <data
+                    android:host="libyanelite.com"
+                    android:scheme="http" />
+            </intent-filter>
         </activity>
+
+
     </application>
 
 </manifest>

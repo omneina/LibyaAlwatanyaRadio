@@ -14,4 +14,8 @@
     <string name="PlayButton">تشغيل</string>
     <string name="StopButton">توقيف</string>
     <string name="CloseButton">إغلاق التطبيق</string>
+    <string name="Local_Time">التوقيت المحلي: </string>
+    <string name="Server_Down">جهاز البث متوقف مؤقتاً</string>
+    <string name="ShareTheApp">حمّل تطبيق راديو ليبيا الوطنية من متجر جوجل:</string>
+    <string name="share_the_app">شارك التطبيق</string>
 </resources>

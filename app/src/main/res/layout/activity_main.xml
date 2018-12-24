@@ -2,18 +2,31 @@
 <android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/topLayout"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:layout_gravity="center"
-    tools:context=".MainActivity"
+    android:background = "@drawable/libya_watanya_benghazi"
 
-    android:id="@+id/topLayout"
-    >
+    tools:context=".MainActivity">
+
+
+    <TextView
+        android:id="@+id/debug_info"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@android:color/holo_blue_light"
+        android:gravity="center"
+        android:text="DATA"
+        android:textColor="@color/black"
+        android:textSize="16sp"
+        tools:layout_editor_absoluteY="1dp"
+        app:layout_constraintBottom_toTopOf="@id/Status_Container"/>
 
     <LinearLayout
         android:id="@+id/Status_Container"
         android:layout_width="match_parent"
-        android:layout_height="120dp"
+        android:layout_height="160dp"
 
         android:gravity="center"
         android:layoutDirection="ltr"
@@ -21,20 +34,33 @@
         app:layout_constraintBottom_toTopOf="@id/PlayStop_Container"
 
         >
+
+        <TextView
+            android:id="@+id/mPlayer_info"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:background="@color/red"
+            android:textColor="@color/yellow"
+            android:textSize="16sp"
+            android:textStyle="bold"
+
+
+            />
+
         <TextView
             android:id="@+id/Local_Time"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:background="@color/white"
+            android:background="@color/green"
+            android:text="Local Time"
             android:textColor="@android:color/black"
-            android:textSize="18sp"
-            />
+            android:textSize="18sp" />
+
         <ProgressBar
             android:id="@+id/pbLoading"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:visibility="invisible"
-            />
+            android:visibility="invisible" />
 
         <TextView
             android:id="@+id/tvStatus"
@@ -48,94 +74,85 @@
 
 
     </LinearLayout>
-            <LinearLayout
-                android:id="@+id/PlayStop_Container"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:orientation="horizontal"
-                android:gravity="center"
-                android:layoutDirection="ltr"
-                app:layout_constraintBottom_toTopOf="@id/close_PBarContainer"
-                >
 
-                <ImageButton
-                    android:id="@+id/bPlay"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    app:srcCompat="@drawable/play_selector"
-                    android:background="@android:color/transparent"
-                    android:contentDescription="@string/PlayButton" />
-
-                <ImageButton
-                    android:id="@+id/bStop"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    app:srcCompat="@drawable/stop"
-                    android:background="@android:color/transparent"
-                    android:contentDescription="@string/StopButton" />
-
-
-
-            </LinearLayout>
-
-    <RelativeLayout
-        android:id="@+id/close_PBarContainer"
+    <LinearLayout
+        android:id="@+id/PlayStop_Container"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:gravity="center"
+        android:layoutDirection="ltr"
         android:orientation="horizontal"
-        app:layout_constraintBottom_toTopOf="@id/lbyanEliteURL"
-        android:paddingBottom="10dp">
+        app:layout_constraintBottom_toTopOf="@id/close_PBarContainer">
+
+        <ImageButton
+            android:id="@+id/bPlay"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:background="@android:color/transparent"
+            android:contentDescription="@string/PlayButton"
+            app:srcCompat="@drawable/play_selector" />
+
+        <ImageButton
+            android:id="@+id/bStop"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:background="@android:color/transparent"
+            android:contentDescription="@string/StopButton"
+            app:srcCompat="@drawable/stop" />
+
+
+    </LinearLayout>
+
+    <RelativeLayout
+        android:id="@+id/close_PBarContainer"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:gravity="center"
+        android:orientation="horizontal"
+        android:paddingBottom="0dp"
+
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent">
 
 
         <ImageButton
             android:id="@+id/bClose"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_centerHorizontal="true"
             android:background="@android:color/transparent"
             android:contentDescription="@string/CloseButton"
-            app:srcCompat="@drawable/close"
-            android:layout_centerHorizontal="true"
-            />
+            app:srcCompat="@drawable/close" />
+
         <SeekBar
             android:id="@+id/volSeekbar"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_below="@id/bClose"
-            android:thumb="@drawable/custom_progress_bar_thumb"
+            android:layout_marginStart="-30dp"
+            android:layout_marginLeft="-30dp"
+            android:layout_toEndOf="@+id/vol_ic"
 
-            />
+
+            android:layout_toRightOf="@+id/vol_ic"
+            android:paddingStart="36dp"
+            android:paddingTop="5dp"
+            android:paddingEnd="36dp"
+            android:thumb="@drawable/custom_progress_bar_thumb" />
+
+        <ImageView
+            android:id="@+id/vol_ic"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/bClose"
+            android:padding="3dp"
+            android:src="@drawable/ic_volume_up_black_24dp" />
 
 
     </RelativeLayout>
 
 
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginBottom="00dp"
-                android:orientation="horizontal"
-                android:gravity="center"
-                app:layout_constraintBottom_toBottomOf="parent"
-                android:background="@color/white"
-                android:id="@+id/lbyanEliteURL"
-                >
-
-                <TextView
-                    android:id="@+id/libyanElite"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_gravity="center"
-                    android:autoLink="web"
-                    android:gravity="center"
-                    android:padding="5dp"
-                    android:text="@string/libyanelite"
-                    android:textSize="16sp"
-                    android:textStyle="bold"
-                    android:textColor="@color/colorPrimaryDark"
-                    />
 
 
-            </LinearLayout>
-
-        </android.support.constraint.ConstraintLayout>
+</android.support.constraint.ConstraintLayout>

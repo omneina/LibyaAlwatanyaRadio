@@ -1,6 +1,7 @@
 package com.libyanelite.libyaalwatanyaradio;
 
 import android.content.Context;
+import android.content.Intent;
 import android.media.AudioManager;
 import android.media.MediaPlayer;
 import android.net.ConnectivityManager;
@@ -10,13 +11,17 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.support.constraint.ConstraintLayout;
 import android.support.v7.app.AppCompatActivity;
+
+import android.support.v7.widget.ShareActionProvider;
 import android.util.Log;
 import android.view.KeyEvent;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
-import android.widget.DigitalClock;
 import android.widget.ImageButton;
 import android.widget.ProgressBar;
 import android.widget.SeekBar;
+
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -27,10 +32,8 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.net.MalformedURLException;
 import java.net.URL;
-import java.text.SimpleDateFormat;
 import java.util.Calendar;
-import java.util.Date;
-import java.util.Locale;
+import java.util.TimeZone;
 
 
 public class MainActivity extends AppCompatActivity /* implements GetFetchedURL */{
@@ -47,7 +50,11 @@ public class MainActivity extends AppCompatActivity /* implements GetFetchedURL 
     // private NotificationManagerCompat notificationManager;
     private ProgressBar progressBar;
     private TextView localTime;
+    private TextView mPlayer_info;
+    private TextView debug_info;
+    private ShareActionProvider mShareActionProvider;
 
+    final static  String TAG = "OSAMA";
 
 
 
@@ -61,6 +68,8 @@ public class MainActivity extends AppCompatActivity /* implements GetFetchedURL 
         }
         return super.onKeyUp(keyCode, event);
     }
+
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -84,21 +93,29 @@ public class MainActivity extends AppCompatActivity /* implements GetFetchedURL 
 
       Crash Test Button !     E N D  */
 
+
         status = findViewById(R.id.tvStatus);
-        mTopLayout =  findViewById(R.id.topLayout);
+        mPlayer_info = findViewById(R.id.mPlayer_info);
+        debug_info = findViewById(R.id.debug_info);
+        mTopLayout = findViewById(R.id.topLayout);
         progressBar = findViewById(R.id.pbLoading);
-        bPlay =  findViewById(R.id.bPlay);
+        bPlay = findViewById(R.id.bPlay);
         localTime = findViewById(R.id.Local_Time);
 
+
         // Display Local Time ----------------- S T A R T
-        final String[] time = {null};
-        final Handler handler = new Handler(getMainLooper());
+
+        final  Handler handler = new Handler(getMainLooper());
         handler.postDelayed(new Runnable() {
             @Override
             public void run() {
-                time[0] = new SimpleDateFormat("HH:mm", Locale.UK).format(new Date());
-                localTime.setText(time[0]);
-                time[0]=null;
+                TimeZone tz = TimeZone.getTimeZone("GMT+02");
+                Calendar c = Calendar.getInstance(tz);
+                String time = String.format("%02d" , c.get(Calendar.HOUR_OF_DAY))+":"+
+                        String.format("%02d" , c.get(Calendar.MINUTE));
+
+                localTime.setText(getString(R.string.Local_Time)+time);
+
 
                 handler.postDelayed(this, 1000);
             }
@@ -107,33 +124,27 @@ public class MainActivity extends AppCompatActivity /* implements GetFetchedURL 
         // Display Local Time ----------------- E N D
 
 
-        final ImageButton bStop = findViewById(R.id.bStop);bStop.setEnabled(false);
+        final ImageButton bStop = findViewById(R.id.bStop);
+        bStop.setEnabled(false);
         final ImageButton bClose = findViewById(R.id.bClose);
         // notificationManager = NotificationManagerCompat.from(this);
         // createNotification();
         FirebaseAnalytics mFirebaseAnalytics = FirebaseAnalytics.getInstance(this);
 
-        if (inetConnection()){
+        if (inetConnection()) {
             mTopLayout.setBackgroundResource(R.drawable.libya_watanya_benghazi_lighton);
             GetURL getURL = new GetURL();
             getURL.execute();
 
-        }else {
+        } else {
             Toast.makeText(this, R.string.NoInternet, Toast.LENGTH_SHORT).show();
             mTopLayout.setBackgroundResource(R.drawable.libya_watanya_benghazi);
 
         }
 
 
-
-
-
-
-
-
-
 // Hook to audio service ----------------------------------------------------------------
-       // mAudioManager = (AudioManager) getSystemService(Context.AUDIO_SERVICE);
+        // mAudioManager = (AudioManager) getSystemService(Context.AUDIO_SERVICE);
         initControls();
 
 
@@ -147,35 +158,42 @@ public class MainActivity extends AppCompatActivity /* implements GetFetchedURL 
             public void onAudioFocusChange(int focusChange) {
                 switch (focusChange) {
                     case AudioManager.AUDIOFOCUS_GAIN:
-                       // Log.i(TAG, "AUDIOFOCUS_GAIN");
+                        // Log.i(TAG, "AUDIOFOCUS_GAIN");
+                        debug_info.setText("AUDIOFOCUS_GAIN");
                         if (mPlayer != null) {
                             mPlayer.start();
                         }
-                      //  else {
-                      //      play();
-                      //  }
+                        //  else {
+                        //      play();
+                        //  }
 
                         break;
                     case AudioManager.AUDIOFOCUS_GAIN_TRANSIENT:
-                      //  Log.i(TAG, "AUDIOFOCUS_GAIN_TRANSIENT");
+                        //  Log.i(TAG, "AUDIOFOCUS_GAIN_TRANSIENT");
+                        debug_info.setText("AUDIOFOCUS_GAIN_TRANSIENT");
                         break;
                     case AudioManager.AUDIOFOCUS_GAIN_TRANSIENT_MAY_DUCK:
-                     //   Log.i(TAG, "AUDIOFOCUS_GAIN_TRANSIENT_MAY_DUCK");
+                        //   Log.i(TAG, "AUDIOFOCUS_GAIN_TRANSIENT_MAY_DUCK");
+                        debug_info.setText("AUDIOFOCUS_GAIN_TRANSIENT_MAY_DUCK");
                         break;
                     case AudioManager.AUDIOFOCUS_LOSS:
-                     //   Log.i(TAG, "AUDIOFOCUS_LOSS");
+                        //   Log.i(TAG, "AUDIOFOCUS_LOSS");
+                        debug_info.setText("AUDIOFOCUS_LOSS stop()");
                         stop();
                         break;
                     case AudioManager.AUDIOFOCUS_LOSS_TRANSIENT:
-                     //   Log.i(TAG, "AUDIOFOCUS_LOSS_TRANSIENT");
+                        //   Log.i(TAG, "AUDIOFOCUS_LOSS_TRANSIENT");
+                        debug_info.setText("AUDIOFOCUS_LOSS_TRANSIEN pause()");
                         pause();
                         break;
                     case AudioManager.AUDIOFOCUS_LOSS_TRANSIENT_CAN_DUCK:
-                    //    Log.i(TAG, "AUDIOFOCUS_LOSS_TRANSIENT_CAN_DUCK");
+                        //    Log.i(TAG, "AUDIOFOCUS_LOSS_TRANSIENT_CAN_DUCK");
+                        debug_info.setText("AUDIOFOCUS_LOSS_TRANSIENT_CAN_DUCK pause()");
                         pause();
                         break;
                     case AudioManager.AUDIOFOCUS_REQUEST_FAILED:
-                     //   Log.i(TAG, "AUDIOFOCUS_REQUEST_FAILED");
+                        //   Log.i(TAG, "AUDIOFOCUS_REQUEST_FAILED");
+                        debug_info.setText("AUDIOFOCUS_REQUEST_FAILED stop()");
                         stop();
                         break;
                     default:
@@ -186,7 +204,6 @@ public class MainActivity extends AppCompatActivity /* implements GetFetchedURL 
 //-----------------------------------------------------------------------------------------
 
 
-
         //mPlayer = new MediaPlayer();    //Moved to bPlay on Click
         //mPlayer.setAudioStreamType(AudioManager.STREAM_MUSIC);  //Moved to bPlay on Click
 
@@ -194,7 +211,8 @@ public class MainActivity extends AppCompatActivity /* implements GetFetchedURL 
         bPlay.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-               initialize_and_play();
+                mPlayer_info.setText("");
+                initialize_and_play();
                 bStop.setEnabled(true);
             }
         });
@@ -203,7 +221,8 @@ public class MainActivity extends AppCompatActivity /* implements GetFetchedURL 
         bStop.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-            stop();
+                mPlayer_info.setText("");
+                stop();
             }
         });
 
@@ -211,24 +230,69 @@ public class MainActivity extends AppCompatActivity /* implements GetFetchedURL 
             @Override
             public void onClick(View view) {
                 // Standard practice to initialize media player (copied from internet) --> START
-                if(mPlayer!=null) {
-                    if(mPlayer.isPlaying()) {
+                if (mPlayer != null) {
+                    if (mPlayer.isPlaying()) {
                         mPlayer.stop();
                     }
                     mPlayer.reset();
                     mPlayer.release();
-                    mPlayer=null;
+                    mPlayer = null;
+
 
                 }
                 // Standard practice to initialize media player (copied from internet) --> END
 
                 mAudioManager.abandonAudioFocus(mOnAudioFocusChangeListener);
+                handler.removeCallbacksAndMessages(null);
                 // notificationManager.cancel(1);
 
                 // System.exit(0);
                 MainActivity.this.finish();
             }
         });
+
+    }
+
+
+    //////////////////  Process Actionbar
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        // Inflate menu resource file.
+        getMenuInflater().inflate(R.menu.menu_main, menu);
+
+        return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        // Handle item selection
+        switch (item.getItemId()) {
+            case R.id.share_app:
+                doShare();
+                return true;
+
+            default:
+                return super.onOptionsItemSelected(item);
+        }
+    }
+
+    public Intent doShare() {
+        // populate the share intent with data
+        Intent intent = new Intent(Intent.ACTION_SEND);
+        intent.setType("text/plain");
+        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_WHEN_TASK_RESET);
+        intent.putExtra(Intent.EXTRA_TEXT, getString(R.string.ShareTheApp)+getString(R.string.AppDownloadURL));
+        startActivity(Intent.createChooser(intent, getString(R.string.share_the_app)));
+        return intent;
+    }
+
+    /////////////////////////////// Proccess Actionbar E N D
+
+    // Call to update the share intent
+    private void setShareIntent(Intent shareIntent) {
+        if (mShareActionProvider != null) {
+            mShareActionProvider.setShareIntent(shareIntent);
+        }
     }
 
     private void stop() {
@@ -245,12 +309,13 @@ public class MainActivity extends AppCompatActivity /* implements GetFetchedURL 
                 mPlayer.release();
                 mPlayer=null;
                 mAudioManager.abandonAudioFocus(mOnAudioFocusChangeListener);
+                // mPlayer_info.setText("");
 
             }
             // Standard practice to initialize media player (copied from internet) --> END
             bPlay.setEnabled(true);
             status.setText(R.string.Stopped);
-          //  mPlyer_info.setText("info");
+          //  mPlayer_info.setText("info");
 
 
 
@@ -326,11 +391,18 @@ public class MainActivity extends AppCompatActivity /* implements GetFetchedURL 
                     mPlayer.setOnInfoListener(new MediaPlayer.OnInfoListener() {
                         @Override
                         public boolean onInfo(MediaPlayer mp, int what, int extra) {
-                         //   mPlyer_info.setText("what : " + what + " extra : " + extra);
-                            if (what == MediaPlayer.MEDIA_INFO_BUFFERING_START )
+                            debug_info.setText("what : " + what + " extra : " + extra);
+                            if (what == MediaPlayer.MEDIA_INFO_BUFFERING_START ){
                                 status.setText(R.string.Buffering);
-                            if (what == MediaPlayer.MEDIA_INFO_BUFFERING_END )
+                                mPlayer_info.setText("");
+                            }
+
+                            if (what == MediaPlayer.MEDIA_INFO_BUFFERING_END ){
                                 status.setText(R.string.Connected);
+                                mPlayer_info.setText("");
+                            }
+
+
 
                             return false;
                         }
@@ -339,7 +411,12 @@ public class MainActivity extends AppCompatActivity /* implements GetFetchedURL 
                     mPlayer.setOnErrorListener(new MediaPlayer.OnErrorListener() {
                         @Override
                         public boolean onError(MediaPlayer mp, int what, int extra) {
-                         //   mPlyer_info.setText("Error What: " + what + " Error extra: " + extra);
+                            debug_info.setText("Error What: " + what + " Error extra: " + extra);
+                            if (what == 1 && extra == -2147483648){
+                                mPlayer_info.setText(R.string.Server_Down);
+                            } else {
+                                mPlayer_info.setText("");
+                            }
                            reinitialize();
                             return false;
                         }
@@ -347,7 +424,7 @@ public class MainActivity extends AppCompatActivity /* implements GetFetchedURL 
 
                 } catch (IOException e) {
                     e.printStackTrace();
-                   // Log.e(TAG, "play: " + e);
+                    Log.e(TAG, "play: " + e);
                 }
 
             }
@@ -381,7 +458,7 @@ public class MainActivity extends AppCompatActivity /* implements GetFetchedURL 
         mTopLayout.setBackgroundResource(R.drawable.libya_watanya_benghazi_lighton);
 
 
-          //  Log.i(TAG, "initialize_and_play: Done Getting URL : " + streamURL);
+            Log.i(TAG, "initialize_and_play: Done Getting URL : " + streamURL);
 
 
 
@@ -420,6 +497,9 @@ public class MainActivity extends AppCompatActivity /* implements GetFetchedURL 
     }
 
 
+
+
+
     private boolean inetConnection () {
 
         ConnectivityManager cm =
@@ -433,7 +513,7 @@ public class MainActivity extends AppCompatActivity /* implements GetFetchedURL 
                 activeNetwork.isConnectedOrConnecting();
     }
 
-     class GetURL extends AsyncTask<Void,Integer,String>  {
+     private  class GetURL extends AsyncTask<Void,Integer,String>  {
 
        // private final static String TAG = "OSAMA MNEINA";
 
@@ -461,9 +541,9 @@ public class MainActivity extends AppCompatActivity /* implements GetFetchedURL 
                 in.close();
 
             } catch (MalformedURLException e) {
-              //  Log.e(TAG, "doInBackground - Malformed URL Exception :" + e.toString(), e);
+                Log.e(TAG, "doInBackground - Malformed URL Exception :" + e.toString(), e);
             } catch (IOException e) {
-              //  Log.e(TAG, "doInBackground - IO Exception :" + e.toString(), e);
+                Log.e(TAG, "doInBackground - IO Exception :" + e.toString(), e);
             }
             // Fetch URL Remotely ------------------------------END
 
@@ -475,7 +555,16 @@ public class MainActivity extends AppCompatActivity /* implements GetFetchedURL 
             super.onPostExecute(o);
             streamURL = o;
             progressBar.setVisibility(View.INVISIBLE);
-           // Log.i(TAG, "onPostExecute: Done Fething URL : "+streamURL);
+
+            Log.i(TAG, "onPostExecute: Done Fething URL : "+streamURL);
+            debug_info.setText("onPostExecute: Done Fething URL : "+streamURL);
+
+            if(streamURL == getString(R.string.FailedToGetURL)){
+                mPlayer_info.setText(getString(R.string.FailedToGetURL));
+            }else {
+                mPlayer_info.setText("");
+            }
+
           //  Toast.makeText(MainActivity.this, "Done Fetching URL" + o, Toast.LENGTH_SHORT).show();
 
         }
@@ -555,6 +644,8 @@ private void createNotification(){
 
         }
     }
+
+
 }
 
 
