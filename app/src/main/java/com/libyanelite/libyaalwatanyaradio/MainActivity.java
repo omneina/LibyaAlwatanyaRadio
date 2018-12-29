@@ -366,6 +366,7 @@ public class MainActivity extends AppCompatActivity /* implements GetFetchedURL 
                         public void onPrepared(MediaPlayer mediaPlayer) {
                             Toast.makeText(MainActivity.this, R.string.Connected, Toast.LENGTH_SHORT).show();
                             status.setText(R.string.Connected);
+                            mPlayer_info.setText("");
 
                             // This was Added to prevent radio from playing while user is in-call session.
                             // This caused by the delay in connection while receiving a call, then when in call if the connection is
